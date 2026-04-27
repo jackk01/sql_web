@@ -95,6 +95,42 @@ class ProfileStore:
             ).fetchone()
         return self._to_summary(row)
 
+    def update_profile(self, connection_id: str, payload: ConnectionPayload, user_id: int) -> ConnectionSummary | None:
+        now = datetime.now(UTC)
+        with get_connection() as connection:
+            cursor = connection.execute(
+                """
+                UPDATE connection_profiles
+                SET name = ?, db_type = ?, host = ?, port = ?, username = ?, password_encrypted = ?,
+                    database_name = ?, secure = ?, updated_at = ?
+                WHERE id = ? AND owner_user_id = ?
+                """,
+                (
+                    payload.name,
+                    payload.db_type.value,
+                    payload.host,
+                    payload.port,
+                    payload.username,
+                    encrypt_secret(payload.password),
+                    payload.database,
+                    int(payload.secure),
+                    now.isoformat(),
+                    connection_id,
+                    user_id,
+                ),
+            )
+            if cursor.rowcount <= 0:
+                return None
+            row = connection.execute(
+                """
+                SELECT id, name, db_type, host, port, username, database_name, secure, created_at, updated_at
+                FROM connection_profiles
+                WHERE id = ? AND owner_user_id = ?
+                """,
+                (connection_id, user_id),
+            ).fetchone()
+        return self._to_summary(row)
+
     def delete_profile(self, connection_id: str, user_id: int) -> bool:
         with get_connection() as connection:
             cursor = connection.execute(

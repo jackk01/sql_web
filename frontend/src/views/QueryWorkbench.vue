@@ -8,41 +8,39 @@
           <p class="hero-copy">统一浏览连接、编写只读 SQL、导出结果，保持高效而克制的分析体验。</p>
         </div>
         <div class="user-badge">
+          <div class="user-badge-avatar" aria-hidden="true">{{ userInitial }}</div>
           <div class="user-badge-copy">
-            <span class="user-badge-label">当前用户</span>
-            <strong>{{ props.currentUser.display_name }}</strong>
-            <span>@{{ props.currentUser.username }}</span>
+            <div class="user-badge-row">
+              <strong>{{ props.currentUser.display_name }}</strong>
+              <span class="user-badge-status">已登录</span>
+            </div>
+            <span class="user-badge-handle">@{{ props.currentUser.username }}</span>
           </div>
-          <el-button text type="primary" @click="$emit('logout')">退出</el-button>
+          <el-button class="user-badge-action" text type="primary" @click="$emit('logout')">退出</el-button>
         </div>
       </div>
 
       <section class="summary-strip">
-        <article class="summary-card summary-card-primary">
+        <article class="summary-card summary-card-primary summary-card-current">
           <span class="summary-label">当前连接</span>
           <strong>{{ activeConnection?.name || '未选择' }}</strong>
           <span>{{ activeConnection ? `${activeConnection.db_type} · ${activeConnection.host}:${activeConnection.port}` : '请选择一个连接开始查询' }}</span>
         </article>
-        <article class="summary-card">
+        <div class="summary-row-break" aria-hidden="true"></div>
+        <article class="summary-card summary-card-database">
           <span class="summary-label">数据库</span>
           <strong>{{ selectedDatabase || '未选择' }}</strong>
           <span>{{ databases.length }} 个可用库</span>
         </article>
-        <article class="summary-card">
-          <span class="summary-label">结果概览</span>
-          <strong>{{ queryResult ? `${queryResult.row_count} 行` : '等待执行' }}</strong>
-          <span>{{ queryResult ? `${queryResult.elapsed_ms} ms` : '只读查询模式' }}</span>
-        </article>
+        <ConnectionManager
+          v-model="activeConnectionId"
+          :connections="connections"
+          :db-types="dbTypes"
+          @changed="loadConnections"
+          @session-expired="emit('session-expired')"
+        />
       </section>
     </section>
-
-    <ConnectionManager
-      v-model="activeConnectionId"
-      :connections="connections"
-      :db-types="dbTypes"
-      @changed="loadConnections"
-      @session-expired="emit('session-expired')"
-    />
 
     <section class="panel workspace-panel">
       <div class="section-heading workbench-heading">
@@ -226,6 +224,7 @@ const executionHint = ref('')
 const activeConnection = computed(() =>
   connections.value.find((item) => item.id === activeConnectionId.value) ?? null
 )
+const userInitial = computed(() => props.currentUser.display_name.trim().charAt(0).toUpperCase() || 'U')
 
 bootstrap()
 

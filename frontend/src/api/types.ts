@@ -52,6 +52,11 @@ export interface ConnectionSummary {
   updated_at: string
 }
 
+export interface ConnectionProfile extends ConnectionSummary {
+  owner_user_id: number
+  password: string
+}
+
 export interface QueryPayload {
   connection_id: string
   sql: string

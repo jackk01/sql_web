@@ -7,6 +7,7 @@ from openpyxl import Workbook
 from app.core.config import get_settings
 from app.models.schemas import (
     ConnectionPayload,
+    ConnectionProfile,
     ConnectionSummary,
     DatabaseType,
     DatabaseTypeInfo,
@@ -47,10 +48,24 @@ class QueryService:
     def list_connections(self, user_id: int) -> list[ConnectionSummary]:
         return self.store.list_profiles(user_id)
 
+    def get_connection(self, connection_id: str, user_id: int) -> ConnectionProfile:
+        profile = self.store.get_profile(connection_id, user_id)
+        if not profile:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Connection not found")
+        return profile
+
     def create_connection(self, payload: ConnectionPayload, user_id: int) -> ConnectionSummary:
         client = create_client(payload)
         client.test_connection()
         return self.store.create_profile(payload, user_id)
+
+    def update_connection(self, connection_id: str, payload: ConnectionPayload, user_id: int) -> ConnectionSummary:
+        client = create_client(payload)
+        client.test_connection()
+        updated = self.store.update_profile(connection_id, payload, user_id)
+        if not updated:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Connection not found")
+        return updated
 
     def delete_connection(self, connection_id: str, user_id: int) -> None:
         deleted = self.store.delete_profile(connection_id, user_id)

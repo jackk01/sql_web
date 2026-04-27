@@ -1,6 +1,7 @@
 import type {
   AuthResponse,
   ConnectionPayload,
+  ConnectionProfile,
   ConnectionSummary,
   DatabaseTypeInfo,
   LoginPayload,
@@ -141,9 +142,20 @@ export function getConnections() {
   return request<ConnectionSummary[]>('/api/v1/connections')
 }
 
+export function getConnection(connectionId: string) {
+  return request<ConnectionProfile>(`/api/v1/connections/${connectionId}`)
+}
+
 export function createConnection(payload: ConnectionPayload) {
   return request<ConnectionSummary>('/api/v1/connections', {
     method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export function updateConnection(connectionId: string, payload: ConnectionPayload) {
+  return request<ConnectionSummary>(`/api/v1/connections/${connectionId}`, {
+    method: 'PUT',
     body: JSON.stringify(payload),
   })
 }

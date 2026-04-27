@@ -2,8 +2,6 @@
 __pycache__/
 *.pyc
 .pytest_cache/
-.venv/
+venv/
 node_modules/
 dist/
-backend/data/app.db
-backend/data/app.key

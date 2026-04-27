@@ -139,25 +139,30 @@ textarea {
 .summary-strip {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
+  align-items: stretch;
   margin-top: 24px;
 }
 
 .summary-card {
   display: grid;
-  gap: 7px;
-  padding: 18px 18px 17px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.62);
+  flex: 1 1 260px;
+  gap: 8px;
+  min-width: 260px;
+  min-height: 166px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(247, 250, 255, 0.62));
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(12px);
 }
 
 .summary-card strong {
-  font-size: 1.08rem;
+  font-size: 1.02rem;
   letter-spacing: -0.02em;
 }
 
@@ -169,7 +174,23 @@ textarea {
 .summary-card-primary {
   background:
     linear-gradient(135deg, rgba(15, 107, 255, 0.12), rgba(15, 107, 255, 0.03)),
-    rgba(255, 255, 255, 0.76);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(247, 250, 255, 0.66));
+  border-color: rgba(15, 107, 255, 0.16);
+}
+
+.summary-card-current {
+  order: 1;
+}
+
+.summary-row-break {
+  order: 3;
+  flex-basis: 100%;
+  width: 100%;
+  height: 0;
+}
+
+.summary-card-database {
+  order: 4;
 }
 
 .summary-label {
@@ -248,31 +269,88 @@ textarea {
 .user-badge {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 14px 12px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.48);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.58);
+  gap: 12px;
+  min-width: 250px;
+  padding: 10px 12px 10px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(248, 251, 255, 0.58));
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(12px);
 }
 
+.user-badge-avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(15, 107, 255, 0.2), rgba(15, 107, 255, 0.08)),
+    rgba(255, 255, 255, 0.85);
+  color: var(--brand-deep);
+  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
 .user-badge-copy {
   display: grid;
-  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  gap: 3px;
 }
 
-.user-badge-label {
-  color: var(--brand);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+.user-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
-.user-badge-copy span {
+.user-badge-row strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.96rem;
+  letter-spacing: -0.01em;
+}
+
+.user-badge-handle {
   color: var(--text-muted);
-  font-size: 0.88rem;
+  font-size: 0.84rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: fit-content;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(35, 181, 104, 0.12);
+  color: #168651;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.user-badge-status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.user-badge-action {
+  align-self: stretch;
+  padding-inline: 10px;
+  border-radius: 14px;
 }
 
 .eyebrow {
@@ -364,29 +442,14 @@ textarea {
   margin-bottom: 0;
 }
 
-.connection-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-}
-
-.connection-panel {
-  display: grid;
-  gap: 18px;
-}
-
-.connection-heading {
-  margin-bottom: 0;
+.connection-inline {
+  display: contents;
 }
 
 .connection-card {
   appearance: none;
+  order: 5;
   text-align: left;
-  border: 1px solid rgba(255, 255, 255, 0.46);
-  border-radius: 22px;
-  padding: 18px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(247, 250, 255, 0.72));
   cursor: pointer;
   transition:
     transform 0.2s ease,
@@ -401,32 +464,56 @@ textarea {
   box-shadow: 0 18px 38px rgba(15, 107, 255, 0.1);
 }
 
-.connection-card p {
-  margin: 0;
+.connection-card.active {
+  background:
+    linear-gradient(135deg, rgba(15, 107, 255, 0.12), rgba(15, 107, 255, 0.03)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(247, 250, 255, 0.66));
 }
 
-.connection-main {
-  margin-top: 10px !important;
+.connection-card-host {
   color: #23344b;
   font-weight: 600;
+  font-size: 0.93rem;
 }
 
-.connection-sub {
-  margin-top: 6px !important;
+.connection-card-meta {
   color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 .connection-card-top {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .connection-card-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 8px;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.connection-card-add {
+  order: 2;
+  background:
+    linear-gradient(135deg, rgba(15, 107, 255, 0.12), rgba(15, 107, 255, 0.03)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(247, 250, 255, 0.66));
+  border-color: rgba(15, 107, 255, 0.16);
+}
+
+.connection-card-add:hover {
+  border-color: rgba(15, 107, 255, 0.3);
+  box-shadow: 0 18px 38px rgba(15, 107, 255, 0.1);
+}
+
+.connection-card-empty {
+  order: 5;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(247, 250, 255, 0.62));
 }
 
 .pill {
@@ -442,11 +529,120 @@ textarea {
   width: 100%;
 }
 
-.drawer-actions {
+.connection-dialog-copy {
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border: 1px solid rgba(15, 107, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(15, 107, 255, 0.05);
+}
+
+.connection-dialog-copy p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.connection-form-dialog {
+  margin-top: 2px;
+}
+
+.connection-form-section + .connection-form-section {
+  margin-top: 16px;
+}
+
+.connection-form-section {
+  padding: 16px;
+  border: 1px solid rgba(23, 32, 51, 0.06);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.connection-form-section-primary {
+  background:
+    linear-gradient(135deg, rgba(15, 107, 255, 0.06), rgba(15, 107, 255, 0.02)),
+    rgba(255, 255, 255, 0.3);
+}
+
+.connection-form-section-head {
+  display: grid;
+  gap: 3px;
+  margin-bottom: 12px;
+}
+
+.connection-form-section-head strong {
+  color: #23344b;
+  font-size: 0.98rem;
+  letter-spacing: -0.01em;
+}
+
+.connection-form-section-kicker {
+  color: var(--brand);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.connection-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 14px;
+}
+
+.connection-form-span-2 {
+  grid-column: 1 / -1;
+}
+
+.dialog-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 16px;
+}
+
+.connection-switch-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+}
+
+.connection-switch-copy {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.connection-dialog {
+  border-radius: 28px;
+}
+
+.connection-dialog-overlay {
+  background: transparent !important;
+}
+
+.connection-dialog .el-dialog {
+  border: 1px solid rgba(255, 255, 255, 0.56);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 251, 255, 0.9));
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.connection-dialog .el-dialog__header {
+  margin-right: 0;
+  padding: 22px 22px 0;
+}
+
+.connection-dialog .el-dialog__title {
+  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.connection-dialog .el-dialog__body {
+  padding: 16px 22px 22px;
 }
 
 .panel .el-input__wrapper,
@@ -664,11 +860,21 @@ textarea {
     width: 100%;
   }
 
-  .summary-strip {
+  .connection-form-grid {
     grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .connection-form-span-2 {
+    grid-column: auto;
   }
 
   .workbench-grid {
     grid-template-columns: 1fr;
+  }
+
+  .user-badge {
+    min-width: 0;
+    width: 100%;
   }
 }

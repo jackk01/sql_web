@@ -7,6 +7,7 @@ from app.api.dependencies import get_auth_service, get_current_user, get_query_s
 from app.models.schemas import (
     AuthResponse,
     ConnectionPayload,
+    ConnectionProfile,
     DatabasesResponse,
     LoginRequest,
     QueryRequest,
@@ -81,6 +82,15 @@ def list_connections(
     return service.list_connections(current_user.id)
 
 
+@router.get("/connections/{connection_id}", response_model=ConnectionProfile)
+def get_connection(
+    connection_id: str,
+    service: QueryService = Depends(get_query_service),
+    current_user: UserPublic = Depends(get_current_user),
+):
+    return service.get_connection(connection_id, current_user.id)
+
+
 @router.post("/connections")
 def create_connection(
     payload: ConnectionPayload,
@@ -89,6 +99,21 @@ def create_connection(
 ):
     try:
         return service.create_connection(payload, current_user.id)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.put("/connections/{connection_id}")
+def update_connection(
+    connection_id: str,
+    payload: ConnectionPayload,
+    service: QueryService = Depends(get_query_service),
+    current_user: UserPublic = Depends(get_current_user),
+):
+    try:
+        return service.update_connection(connection_id, payload, current_user.id)
     except HTTPException:
         raise
     except Exception as exc:

@@ -22,15 +22,22 @@
 
       <section class="summary-strip">
         <article class="summary-card summary-card-primary summary-card-current">
-          <span class="summary-label">当前连接</span>
-          <strong>{{ activeConnection?.name || '未选择' }}</strong>
-          <span>{{ activeConnection ? `${activeConnection.db_type} · ${activeConnection.host}:${activeConnection.port}` : '请选择一个连接开始查询' }}</span>
+          <div class="summary-card-head">
+            <span class="summary-icon summary-icon-connection" aria-hidden="true">DB</span>
+            <span class="summary-label">当前连接</span>
+          </div>
+          <strong class="summary-value">{{ activeConnection?.name || '未选择' }}</strong>
+          <p class="summary-description">
+            {{ activeConnection ? `${activeConnection.db_type} · ${activeConnection.host}:${activeConnection.port}` : '请选择一个连接开始查询' }}
+          </p>
         </article>
-        <div class="summary-row-break" aria-hidden="true"></div>
         <article class="summary-card summary-card-database">
-          <span class="summary-label">数据库</span>
-          <strong>{{ selectedDatabase || '未选择' }}</strong>
-          <span>{{ databases.length }} 个可用库</span>
+          <div class="summary-card-head">
+            <span class="summary-icon summary-icon-database" aria-hidden="true">SQL</span>
+            <span class="summary-label">数据库</span>
+          </div>
+          <strong class="summary-value">{{ selectedDatabase || '未选择' }}</strong>
+          <p class="summary-description">{{ databases.length }} 个可用库</p>
         </article>
         <ConnectionManager
           v-model="activeConnectionId"

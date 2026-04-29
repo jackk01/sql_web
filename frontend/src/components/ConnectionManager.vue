@@ -1,15 +1,21 @@
 <template>
   <section class="connection-inline">
     <button type="button" class="summary-card connection-card connection-card-add" @click="openCreateDialog">
-      <span class="summary-label">数据库连接</span>
-      <strong>新增连接</strong>
-      <span>创建一个新的数据库配置</span>
+      <div class="summary-card-head">
+        <span class="summary-icon summary-icon-add" aria-hidden="true">＋</span>
+        <span class="summary-label">数据库连接</span>
+      </div>
+      <strong class="summary-value">新增连接</strong>
+      <p class="summary-description">创建一个新的数据库配置</p>
     </button>
 
     <article v-if="connections.length === 0" class="summary-card connection-card connection-card-empty">
-      <span class="summary-label">数据库连接</span>
-      <strong>还没有连接</strong>
-      <span>点击左侧新增连接开始配置</span>
+      <div class="summary-card-head">
+        <span class="summary-icon summary-icon-empty" aria-hidden="true">—</span>
+        <span class="summary-label">数据库连接</span>
+      </div>
+      <strong class="summary-value">还没有连接</strong>
+      <p class="summary-description">点击左侧新增连接开始配置</p>
     </article>
 
     <template v-else>
@@ -23,9 +29,12 @@
         @click="openEditDialog(item.id)"
         @keydown.enter="openEditDialog(item.id)"
       >
-        <span class="summary-label">数据库连接</span>
+        <div class="summary-card-head">
+          <span class="summary-icon summary-icon-server" aria-hidden="true">{{ item.db_type.slice(0, 2).toUpperCase() }}</span>
+          <span class="summary-label">数据库连接</span>
+        </div>
         <div class="connection-card-top">
-          <strong>{{ item.name }}</strong>
+          <strong class="summary-value">{{ item.name }}</strong>
           <span class="pill">{{ item.db_type }}</span>
         </div>
         <span class="connection-card-host">{{ item.host }}:{{ item.port }}</span>

@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 .pytest_cache/
 venv/
+data/
 node_modules/
 dist/
-app.db
 .codex
